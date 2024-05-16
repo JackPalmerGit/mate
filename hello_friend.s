@@ -1,7 +1,7 @@
 global _start
 
 section .data
-    message db "Hello HTB Academy!"
+    message db "Hello Friend"
     length equ $-message
 
 section .text
