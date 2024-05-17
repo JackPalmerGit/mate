@@ -7,59 +7,16 @@
 #define DEFAULT_ARCH "x86"
 
 void usage(const char *prog_name) {
-    printf("Usage: %s <assembly-file> [--arch <architecture>] [--default]\n", prog_name);
+    printf("Multi-Architectural Testing Environment (MATE)\n");
+    printf("Usage: %s [-f <assembly-file>] [-e <assembly-file>] [--arch <architecture>] [--default]\n", prog_name);
     printf("Supported architectures:\n");
-    printf("  - 6502\n");
-    printf("  - 6800\n");
-    printf("  - 6809\n");
-    printf("  - 680x0\n");
-    printf("  - 8080\n");
-    printf("  - 8051\n");
-    printf("  - x86\n");
-    printf("  - Alpha\n");
-    printf("  - ARC\n");
-    printf("  - ARM/A32\n");
-    printf("  - Thumb/T32\n");
-    printf("  - Arm64/A64\n");
-    printf("  - AVR\n");
-    printf("  - AVR32\n");
-    printf("  - Blackfin\n");
-    printf("  - CDC3000\n");
-    printf("  - CDC6000CP\n");
-    printf("  - CDC6000PP\n");
-    printf("  - Crusoe\n");
-    printf("  - Elbrus2000\n");
-    printf("  - DLX\n");
-    printf("  - ESi-RISC\n");
-    printf("  - IAPX432\n");
-    printf("  - Itanium\n");
-    printf("  - LoongArch\n");
-    printf("  - M32R\n");
-    printf("  - m88k\n");
-    printf("  - Mico32\n");
-    printf("  - MIPS\n");
-    printf("  - MMIX\n");
-    printf("  - NiosII\n");
-    printf("  - NS320xx\n");
-    printf("  - OpenRISC\n");
-    printf("  - PA-RISC\n");
-    printf("  - PDP8\n");
-    printf("  - PDP11\n");
-    printf("  - POWER\n");
-    printf("  - PowerPC\n");
-    printf("  - PowerISA\n");
-    printf("  - RISC-V\n");
-    printf("  - RX\n");
-    printf("  - S+core\n");
-    printf("  - SPARC\n");
-    printf("  - SuperH\n");
-    printf("  - System360\n");
-    printf("  - System370\n");
-    printf("  - z/Architecture\n");
-    printf("  - TMS320C6000\n");
-    printf("  - Transputer\n");
-    printf("  - VAX\n");
-    printf("  - Z80\n");
+    printf("  - 6502\n  - 6800\n  - 6809\n  - 680x0\n  - 8080\n  - 8051\n  - x86\n  - Alpha\n");
+    printf("  - ARC\n  - ARM/A32\n  - Thumb/T32\n  - Arm64/A64\n  - AVR\n  - AVR32\n  - Blackfin\n");
+    printf("  - CDC3000\n  - CDC6000CP\n  - CDC6000PP\n  - Crusoe\n  - Elbrus2000\n  - DLX\n  - ESi-RISC\n");
+    printf("  - IAPX432\n  - Itanium\n  - LoongArch\n  - M32R\n  - m88k\n  - Mico32\n  - MIPS\n  - MMIX\n");
+    printf("  - NiosII\n  - NS320xx\n  - OpenRISC\n  - PA-RISC\n  - PDP8\n  - PDP11\n  - POWER\n  - PowerPC\n");
+    printf("  - PowerISA\n  - RISC-V\n  - RX\n  - S+core\n  - SPARC\n  - SuperH\n  - System360\n  - System370\n");
+    printf("  - z/Architecture\n  - TMS320C6000\n  - Transputer\n  - VAX\n  - Z80\n");
     exit(EXIT_FAILURE);
 }
 
@@ -84,7 +41,7 @@ void set_default_arch(const char *arch) {
     }
 }
 
-void compile_and_link(const char *arch, const char *file, const char *fileName) {
+void compile_and_link(const char *prog_name, const char *arch, const char *file, const char *fileName) {
     char command[512];
 
     if (strcmp(arch, "x86") == 0) {
@@ -120,11 +77,11 @@ void compile_and_link(const char *arch, const char *file, const char *fileName) 
     } else if (strcmp(arch, "Blackfin") == 0) {
         snprintf(command, sizeof(command), "bfin-uclinux-as %s -o %s.o && bfin-uclinux-ld %s.o -o %s", file, fileName, fileName, fileName);
     } else if (strcmp(arch, "CDC3000") == 0) {
-        snprintf(command, sizeof(command), "as-cdc3000 %s -o %s.o && ld-cdc3000 %s.o -o %s", file, fileName, fileName, fileName);
+        snprintf(command, sizeof(command), "cdc-as %s -o %s.o && cdc-ld %s.o -o %s", file, fileName, fileName, fileName);
     } else if (strcmp(arch, "CDC6000CP") == 0) {
-        snprintf(command, sizeof(command), "as-cdc6000cp %s -o %s.o && ld-cdc6000cp %s.o -o %s", file, fileName, fileName, fileName);
+        snprintf(command, sizeof(command), "cdc-as %s -o %s.o && cdc-ld %s.o -o %s", file, fileName, fileName, fileName);
     } else if (strcmp(arch, "CDC6000PP") == 0) {
-        snprintf(command, sizeof(command), "as-cdc6000pp %s -o %s.o && ld-cdc6000pp %s.o -o %s", file, fileName, fileName, fileName);
+        snprintf(command, sizeof(command), "cdc-as %s -o %s.o && cdc-ld %s.o -o %s", file, fileName, fileName, fileName);
     } else if (strcmp(arch, "Crusoe") == 0) {
         snprintf(command, sizeof(command), "crusoe-as %s -o %s.o && crusoe-ld %s.o -o %s", file, fileName, fileName, fileName);
     } else if (strcmp(arch, "Elbrus2000") == 0) {
@@ -193,7 +150,7 @@ void compile_and_link(const char *arch, const char *file, const char *fileName) 
         snprintf(command, sizeof(command), "z80asm -o %s.o %s && z80ld -o %s %s.o", fileName, file, fileName, fileName);
     } else {
         printf("Unsupported architecture: %s\n", arch);
-        usage("assembler");
+        usage(prog_name);
     }
 
     system(command);
@@ -207,6 +164,8 @@ int main(int argc, char *argv[]) {
     char arch[64];
     read_default_arch(arch);
     int set_new_default = 0;
+    int edit_mode = 0;
+    int file_mode = 0;
     char *file = NULL;
 
     for (int i = 1; i < argc; i++) {
@@ -219,16 +178,28 @@ int main(int argc, char *argv[]) {
             }
         } else if (strcmp(argv[i], "--default") == 0) {
             set_new_default = 1;
-        } else {
-            if (!file) {
-                file = argv[i];
+        } else if (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "--edit") == 0) {
+            edit_mode = 1;
+            if (i + 1 < argc) {
+                file = argv[i + 1];
+                i++;
             } else {
                 usage(argv[0]);
             }
+        } else if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--file") == 0) {
+            file_mode = 1;
+            if (i + 1 < argc) {
+                file = argv[i + 1];
+                i++;
+            } else {
+                usage(argv[0]);
+            }
+        } else {
+            usage(argv[0]);
         }
     }
 
-    if (!file || (!strstr(file, ".s") && !strstr(file, ".asm") && !strstr(file, ".S"))) {
+    if (!file || (!strstr(file, ".s") && !strstr(file, ".asm") && !strstr(file, ".S") && !strstr(file, ".a") && !strstr(file, ".as") && !strstr(file, ".asm64"))) {
         usage(argv[0]);
     }
 
@@ -236,18 +207,28 @@ int main(int argc, char *argv[]) {
         set_default_arch(arch);
     }
 
-    char fileName[256];
-    strcpy(fileName, file);
-    char *ext = strrchr(fileName, '.');
-    if (ext) {
-        *ext = '\0';
+    if (edit_mode) {
+        // Launch nano to edit the specified file
+        char command[256];
+        snprintf(command, sizeof(command), "nano %s", file);
+        system(command);
     }
 
-    compile_and_link(arch, file, fileName);
+    if (file_mode || edit_mode) {
+        // Assemble and link the file based on the architecture
+        char fileName[256];
+        strcpy(fileName, file);
+        char *ext = strrchr(fileName, '.');
+        if (ext) {
+            *ext = '\0';
+        }
 
-    char run_command[256];
-    snprintf(run_command, sizeof(run_command), "./%s", fileName);
-    system(run_command);
+        compile_and_link(argv[0], arch, file, fileName);
+
+        char run_command[256];
+        snprintf(run_command, sizeof(run_command), "./%s", fileName);
+        system(run_command);
+    }
 
     return 0;
 }
